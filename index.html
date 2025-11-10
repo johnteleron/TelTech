@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TelTech - Offline Store</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    crossorigin="anonymous"
+  />
+  <link rel="stylesheet" href="StoreStyle.css" />
+  <style>
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-backdrop.hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="#" class="text-3xl font-extrabold text-indigo-600 hover:text-indigo-800">
+        TechHaven
+      </a>
+      <nav class="hidden md:flex space-x-6 text-gray-600 font-medium">
+        <a href="#" class="hover:text-indigo-600">Shop</a>
+        <a href="#" class="hover:text-indigo-600">Categories</a>
+        <a href="#" class="hover:text-indigo-600">Deals</a>
+        <a href="#" class="hover:text-indigo-600">Support</a>
+      </nav>
+      <div class="flex items-center space-x-4">
+        <button class="text-gray-600 hover:text-indigo-600 relative">
+          <i class="fas fa-shopping-cart text-xl"></i>
+          <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+            0
+          </span>
+        </button>
+        <a href="#" id="auth-button" class="bg-indigo-600 text-white font-medium py-1.5 px-3 rounded-lg text-sm hover:bg-indigo-700">
+          <i class="fas fa-sign-in-alt text-xs mr-2"></i> Log In
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow container mx-auto px-4 py-8">
+    <section class="bg-indigo-600 text-white rounded-xl p-6 md:p-12 mb-10 shadow-xl">
+      <div class="md:flex items-center justify-between">
+        <div>
+          <h2 class="text-4xl md:text-5xl font-extrabold mb-3">Summer Flash Sale!</h2>
+          <p class="text-indigo-200 text-lg mb-6">Up to 50% off the latest gadgets and accessories.</p>
+          <button class="bg-yellow-400 text-indigo-900 font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-yellow-300 transition duration-300">
+            Shop Now
+          </button>
+        </div>
+        <div class="mt-8 md:mt-0 md:w-1/3 flex justify-center">
+          <i class="fas fa-tags text-7xl text-yellow-400 opacity-80"></i>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-10 flex justify-between items-center">
+      <h3 class="text-3xl font-bold text-gray-800 border-b-2 border-indigo-200 pb-2">All Products</h3>
+      <button id="product-manager-btn" onclick="openProductModal()" class="bg-green-500 text-white font-medium py-2 px-4 rounded-lg shadow hover:bg-green-600" style="display: none;">
+        <i class="fas fa-toolbox mr-1"></i> Manage Products
+      </button>
+    </section>
+
+    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <p class="text-center col-span-full text-gray-500" id="loading-message">Loading products...</p>
+    </div>
+  </main>
+
+  <footer class="bg-gray-800 text-white mt-auto">
+    <div class="container mx-auto px-4 py-10">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-sm">
+        <div>
+          <h5 class="font-bold text-indigo-400 mb-3 text-lg">TechHaven</h5>
+          <p class="text-gray-400">Your trusted source for the latest technology.</p>
+        </div>
+        <div>
+          <h5 class="font-bold mb-3">Support</h5>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="#" class="hover:text-indigo-400">Contact Us</a></li>
+            <li><a href="#" class="hover:text-indigo-400">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="font-bold mb-3">Legal</h5>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="#" class="hover:text-indigo-400">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-indigo-400">Terms of Service</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="font-bold mb-3">Connect</h5>
+          <div class="flex space-x-4 text-xl">
+            <a href="#" class="hover:text-indigo-400"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="hover:text-indigo-400"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-gray-700 text-center text-gray-500 text-xs">
+        &copy; 2025 TechHaven. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <div id="product-management-modal" class="modal-backdrop hidden" onclick="closeProductModal(event)">
+    <div class="bg-white rounded-xl shadow-2xl p-6 w-11/12 max-w-4xl max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+      <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-2 flex justify-between items-center">
+        Product Inventory Management
+        <button onclick="closeProductModal()" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+      </h2>
+
+      <form id="product-form" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg shadow-inner mb-6">
+        <input type="hidden" id="product-id">
+        <div class="md:col-span-2">
+          <label for="product-name" class="block text-sm font-medium text-gray-700">Product Name</label>
+          <input type="text" id="product-name" required class="mt-1 block w-full rounded-md border-gray-300 p-2 border">
+        </div>
+        <div>
+          <label for="product-price" class="block text-sm font-medium text-gray-700">Price ($)</label>
+          <input type="number" step="0.01" id="product-price" required class="mt-1 block w-full rounded-md border-gray-300 p-2 border">
+        </div>
+        <div>
+          <label for="product-rating" class="block text-sm font-medium text-gray-700">Rating (1.0 - 5.0)</label>
+          <input type="number" step="0.1" min="1" max="5" id="product-rating" value="4.5" required class="mt-1 block w-full rounded-md border-gray-300 p-2 border">
+        </div>
+        <div class="md:col-span-2">
+          <label for="product-description" class="block text-sm font-medium text-gray-700">Description</label>
+          <textarea id="product-description" rows="2" required class="mt-1 block w-full rounded-md border-gray-300 p-2 border"></textarea>
+        </div>
+
+        <div class="md:col-span-2 border-t pt-4 mt-2">
+          <h4 class="text-lg font-semibold text-gray-800 mb-3">Product Image Management</h4>
+          <div id="current-image-preview" class="mb-4 hidden">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Current Image:</label>
+            <img id="product-image-preview" src="" alt="Product Image Preview" class="h-32 w-32 object-cover rounded-lg border shadow-sm mb-2">
+            <button type="button" onclick="deleteImage()" id="delete-image-btn" class="text-red-500 hover:text-red-700 text-sm font-medium mt-1">
+              <i class="fas fa-trash-alt mr-1"></i> Delete Image
+            </button>
+          </div>
+
+          <label for="product-image-url" class="block text-sm font-medium text-gray-700 mt-4">Image URL (Add/Replace)</label>
+          <input type="url" id="product-image-url" class="mt-1 block w-full rounded-md border-gray-300 p-2 border" placeholder="Enter image URL or path (e.g., images/product-x.jpg)">
+          
+          <p class="text-xs text-gray-500 mt-1">Leave empty to keep the current image. Enter a new URL to add or replace it.</p>
+        </div>
+        <div class="md:col-span-2 flex justify-end space-x-3">
+          <button type="button" onclick="clearForm()" class="bg-gray-300 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-400">Clear</button>
+          <button type="submit" id="save-product-btn" class="bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700">
+            <i class="fas fa-save mr-1"></i> Save Product
+          </button>
+        </div>
+      </form>
+
+      <h3 class="text-xl font-bold text-gray-700 mb-4">Current Products</h3>
+      <div id="admin-product-list" class="space-y-3">
+        <p class="text-center text-gray-500">No products yet.</p>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // --- Login/Logout & Protection Logic ---
+    const authButton = document.getElementById('auth-button');
+    const manageProductsButton = document.getElementById('product-manager-btn');
+
+    function checkAuthStatus() {
+        const loggedInUserEmail = sessionStorage.getItem('loggedInUserEmail');
+        
+        if (loggedInUserEmail) {
+            // Logged In: Show Log Out button and Management button
+            authButton.innerHTML = '<i class="fas fa-sign-out-alt text-xs mr-2"></i> Log Out';
+            authButton.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+            authButton.classList.add('bg-red-500', 'hover:bg-red-600');
+            manageProductsButton.style.display = 'inline-block';
+
+            authButton.onclick = () => { 
+                sessionStorage.removeItem('loggedInUserEmail'); // Clear session
+                alert("You have been logged out.");
+                window.location.href = "login.html"; // Redirect to login
+                return false; 
+            };
+        } else {
+            // Not Logged In: Show Log In button and hide Management button
+            authButton.innerHTML = '<i class="fas fa-sign-in-alt text-xs mr-2"></i> Log In';
+            authButton.classList.remove('bg-red-500', 'hover:bg-red-600');
+            authButton.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+            manageProductsButton.style.display = 'none';
+
+            authButton.onclick = () => { 
+                window.location.href = 'login.html';
+                return false; 
+            };
+            
+            // Optional: Redirect non-logged-in users to the login page immediately
+            // window.location.href = "login.html"; 
+        }
+    }
+
+    // Run the check when the page loads
+    checkAuthStatus();
+
+
+    // --- Placeholder/Existing Functions (from your original code) ---
+    // NOTE: For the store to fully function, you'll need to implement the actual product management logic 
+    // in your 'script.js' file and ensure the 'script.js' file handles the login check if needed.
+
+    function openProductModal() {
+        if (!sessionStorage.getItem('loggedInUserEmail')) {
+            alert("You must be logged in to manage products.");
+            window.location.href = "login.html";
+            return;
+        }
+        document.getElementById('product-management-modal').classList.remove('hidden');
+    }
+
+    function closeProductModal(event) {
+        if (event && event.target.id === 'product-management-modal') {
+             document.getElementById('product-management-modal').classList.add('hidden');
+        } else if (!event) {
+             document.getElementById('product-management-modal').classList.add('hidden');
+        }
+    }
+    
+    // Placeholder functions for the product form (must be implemented in script.js)
+    function clearForm() { console.log('Form cleared.'); }
+    function deleteImage() { console.log('Image deleted.'); }
+
+  </script>
+  <script src="auth.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
