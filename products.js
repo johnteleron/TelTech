@@ -1,8 +1,8 @@
 // ===================================================================================================================
 // 1. CONFIGURATION, UTILITIES, and SYNCHRONIZATION
 // ===================================================================================================================
-
-const API_URL = "http://localhost:5000/api/products"; // MongoDB API Endpoint
+// ✅ CORRECT: Points to your live server on Render
+const API_URL = "https://mongodb-crud-api-khgh.onrender.com/api/products"; // MongoDB API Endpoint
 window.POLLING_INTERVAL = 10000;
 
 // NOTE: This file assumes 'addItemToCart' is defined elsewhere (e.g., in script.js).
