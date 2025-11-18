@@ -138,7 +138,7 @@ function saveCart(cart) {
 // 🚀 NEW: Function to send a request to the server to update stock
 async function updateProductStock(productId, quantityDeducted) {
     // NOTE: This URL must match the new route you are adding in server.js
-    const API_STOCK_DEDUCT_URL = `http://localhost:5000/api/products/stock/deduct`; 
+    const API_STOCK_DEDUCT_URL = `https://mongodb-crud-api-khgh.onrender.com/api/products/stock/deduct`; 
 
     try {
         const response = await fetch(API_STOCK_DEDUCT_URL, {
@@ -309,3 +309,4 @@ document.addEventListener('DOMContentLoaded', () => {
         adminLoginForm.addEventListener('submit', handleAdminLogin);
     }
 });
+
